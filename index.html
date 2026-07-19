@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f2ee">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="apple-touch-icon.png">
+<title>手作飾品成本小幫手 V4</title>
+<style>
+:root{
+ --bg:#f7f2ee;--card:#fffdfb;--text:#302a27;--muted:#857a74;--line:#eadfd8;
+ --brand:#a9786c;--brand2:#8e645a;--soft:#f2e4df;--danger:#b45050;--green:#66806d;
+ --shadow:0 12px 35px rgba(69,51,43,.08)
+}
+*{box-sizing:border-box}html{background:var(--bg)}
+body{margin:0;background:linear-gradient(180deg,#fbf7f4,var(--bg));font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;color:var(--text)}
+button,input,select,textarea{font:inherit}button{-webkit-tap-highlight-color:transparent}
+.app{max-width:760px;margin:auto;min-height:100vh;padding-bottom:96px}
+header{position:sticky;top:0;z-index:20;padding:17px 17px 13px;background:rgba(247,242,238,.9);backdrop-filter:blur(18px);border-bottom:1px solid rgba(234,223,216,.8)}
+.headerRow{display:flex;justify-content:space-between;align-items:center;gap:12px}
+header h1{margin:0 0 3px;font-size:22px}header p{margin:0;font-size:13px;color:var(--muted)}
+.iconBtn{border:0;width:42px;height:42px;border-radius:15px;background:#fff;box-shadow:0 5px 15px rgba(60,45,38,.08);font-size:19px}
+main{padding:17px 15px}.view{display:none}.view.active{display:block}
+.hero{padding:22px 20px;border-radius:28px;background:linear-gradient(145deg,#fffaf7,#f0dfd8);box-shadow:var(--shadow);border:1px solid #ead8d0;margin-bottom:17px}
+.kicker{font-size:11px;font-weight:900;letter-spacing:1.5px;color:var(--brand2);margin-bottom:7px}
+.hero h2{font-size:25px;line-height:1.25;margin:0 0 8px}.hero p{font-size:13px;line-height:1.6;color:var(--muted);margin:0}
+.homeGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}
+.homeTile{aspect-ratio:1/1;border:0;border-radius:25px;padding:17px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow);color:var(--text);position:relative;overflow:hidden}
+.homeTile:after{content:"";position:absolute;width:100px;height:100px;border-radius:50%;right:-28px;bottom:-35px;background:rgba(255,255,255,.45)}
+.homeTile.purchase{background:linear-gradient(145deg,#f2e1da,#e9d0c7)}.homeTile.make{background:linear-gradient(145deg,#ebe5f1,#dcd3e7)}
+.homeTile.library{background:linear-gradient(145deg,#e6eee7,#d7e4da)}.homeTile.works{background:linear-gradient(145deg,#efe6dc,#e1d4c7)}
+.tileIcon{width:51px;height:51px;border-radius:17px;background:rgba(255,255,255,.72);display:grid;place-items:center;font-size:26px;box-shadow:0 7px 18px rgba(55,42,35,.08)}
+.tileText{z-index:1}.tileText strong{font-size:18px;display:block;margin-bottom:4px}.tileText small{font-size:12px;line-height:1.4;color:#706660}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:17px;margin-bottom:13px;box-shadow:0 6px 20px rgba(60,45,37,.04)}
+.sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:18px;font-weight:900;margin-bottom:13px}
+label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin:13px 0 7px}
+input,select,textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px 15px;outline:0;color:var(--text)}
+input:focus,select:focus,textarea:focus{border-color:#cda99f;box-shadow:0 0 0 4px rgba(169,120,108,.1)}
+textarea{min-height:82px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{border:0;border-radius:16px;padding:13px 15px;font-weight:900}.btn.primary{color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 8px 18px rgba(142,100,90,.2)}
+.btn.secondary{background:var(--soft);color:var(--brand2)}.btn.ghost{background:#fff;border:1px solid var(--line);color:var(--text)}.btn.danger{background:#faecec;color:var(--danger)}
+.btn.full{width:100%}.btn.small{font-size:13px;padding:9px 11px}.inline{display:flex;gap:8px}.inline>*{flex:1}
+.notice{border:1px solid #eadcc3;background:#fff9ec;color:#6e5b32;padding:12px 14px;border-radius:16px;font-size:13px;line-height:1.55}
+.stepper{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
+.step{padding:9px 5px;border-radius:999px;background:#ebe4df;color:var(--muted);text-align:center;font-size:12px;font-weight:900}
+.step.active{background:var(--brand);color:#fff}.step.done{background:#e3ece5;color:var(--green)}
+.photoBox{border:1.5px dashed #d7c5bd;border-radius:20px;background:#fff;padding:12px;text-align:center}
+.photoPreview{width:100%;max-height:260px;object-fit:cover;border-radius:15px;display:none}.photoPlaceholder{padding:24px 8px;color:var(--muted);font-size:13px}
+.pills{display:flex;gap:8px;overflow:auto;padding-bottom:3px}.pill{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 13px;white-space:nowrap}.pill.active{background:var(--brand);border-color:var(--brand);color:#fff}
+.materialQuick{display:flex;gap:9px;overflow:auto;padding-bottom:6px}
+.quickChip{min-width:145px;border:1px solid var(--line);background:#fff;border-radius:17px;padding:12px;text-align:left}
+.quickChip strong{display:block;font-size:14px;margin-bottom:4px}.quickChip small{font-size:11px;color:var(--muted)}
+.listItem{background:#fff;border:1px solid var(--line);border-radius:19px;padding:15px;margin-bottom:10px}
+.listItem h3{font-size:16px;margin:0 0 6px}.meta{font-size:13px;line-height:1.6;color:var(--muted)}
+.badge{display:inline-block;border-radius:999px;background:var(--soft);color:var(--brand2);padding:4px 9px;font-size:11px;font-weight:900;margin-right:4px}
+.materialRow{display:flex;align-items:flex-start;gap:11px}.materialMain{flex:1}.star{border:0;background:transparent;font-size:22px;padding:2px}
+.stockLine{font-weight:800;color:var(--green);margin-top:3px}
+.costHistoryBtn{display:inline-flex;align-items:center;gap:5px;border:0;background:transparent;color:var(--brand2);padding:3px 0;margin-top:2px;font-size:13px;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+.historySummary{background:linear-gradient(145deg,#fff,#f3e5df);border:1px solid #ead5cd;border-radius:19px;padding:15px;margin-bottom:12px}
+.historySummary strong{display:block;font-size:18px;margin-bottom:4px}.historyEntry{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px}.historyEntryTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.historyEntryTop strong{font-size:15px}.historyDate{color:var(--muted);font-size:12px;white-space:nowrap}.historyCost{font-size:17px;font-weight:900;color:var(--brand2);margin:8px 0 4px}
+.priceMode{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:7px}
+.priceMode button{border:1px solid var(--line);background:#fff;border-radius:15px;padding:12px 8px;font-weight:900;color:var(--muted)}
+.priceMode button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+.calcHint{font-size:12px;color:var(--brand2);margin-top:5px;min-height:19px;font-weight:700}
+input[readonly]{background:#f7f1ed;color:var(--brand2);font-weight:800}
+.totalBox{background:linear-gradient(145deg,#fff,#f3e5df);border:1px solid #ead5cd;border-radius:24px;padding:18px;box-shadow:var(--shadow)}
+.totalLine{display:flex;justify-content:space-between;padding:7px 0}.totalLine.big{font-size:21px;font-weight:900;border-top:1px dashed #d8bbb0;margin-top:8px;padding-top:14px}
+.workCard{background:#fff;border:1px solid var(--line);border-radius:23px;overflow:hidden;margin-bottom:13px;box-shadow:0 7px 22px rgba(58,43,36,.05)}
+.workPhoto{width:100%;height:210px;object-fit:cover;background:linear-gradient(145deg,#eee5df,#f8f3f0)}
+.workPlaceholder{height:155px;background:linear-gradient(145deg,#eee5df,#f7f1ed);display:grid;place-items:center;font-size:47px}
+.workBody{padding:16px}.workTop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.workTop h3{margin:0;font-size:18px}.date{font-size:12px;color:var(--muted);white-space:nowrap}
+.costGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:13px 0}.costCell{background:#faf6f3;border-radius:15px;padding:11px}.costCell small{display:block;color:var(--muted);font-size:11px;margin-bottom:3px}.costCell strong{font-size:18px}
+details{border-top:1px solid var(--line);padding-top:11px;margin-top:10px}summary{font-weight:800;cursor:pointer}
+.empty{text-align:center;color:var(--muted);padding:28px 10px}.hidden{display:none!important}
+.bottomNav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(760px,100%);display:grid;grid-template-columns:repeat(5,1fr);padding:7px 6px calc(7px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-top:1px solid var(--line);z-index:30}
+.navBtn{border:0;background:transparent;color:var(--muted);font-size:11px;padding:7px 2px;border-radius:14px}.navBtn span{display:block;font-size:20px;margin-bottom:2px}.navBtn.active{background:#faf2ef;color:var(--brand2);font-weight:900}
+.modal{position:fixed;inset:0;background:rgba(31,25,22,.38);display:none;align-items:flex-end;z-index:50}.modal.open{display:flex}
+.sheet{width:min(760px,100%);max-height:91vh;overflow:auto;margin:auto;background:var(--bg);border-radius:28px 28px 0 0;padding:18px 15px calc(21px + env(safe-area-inset-bottom))}
+.sheetHead{position:sticky;top:0;background:var(--bg);display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;z-index:3}.sheetHead h2{margin:0}.close{border:0;width:36px;height:36px;border-radius:50%;background:#e8e1dc}
+.recentSection{margin-top:18px}.recentTitle{font-size:15px;font-weight:900;margin:0 0 10px}.recentWorkRow{display:flex;gap:10px;overflow:auto;padding-bottom:5px}
+.recentWork{min-width:150px;border:1px solid var(--line);border-radius:18px;background:#fff;overflow:hidden;text-align:left;padding:0}
+.recentWork img,.recentWork .ph{height:95px;width:100%;object-fit:cover;background:#eee5df;display:grid;place-items:center;font-size:30px}.recentWork div:last-child{padding:10px}.recentWork strong{display:block;font-size:13px}.recentWork small{font-size:11px;color:var(--muted)}
+@media(max-width:430px){.row{grid-template-columns:1fr}.homeGrid{gap:11px}.homeTile{border-radius:22px;padding:15px}.hero h2{font-size:23px}.workPhoto{height:190px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="headerRow"><div><h1 id="pageTitle">手作飾品成本小幫手</h1><p id="pageSub">記錄材料、作品配方與成本</p></div><button class="iconBtn" onclick="go('settings')" aria-label="設定">⚙️</button></div></header>
+<main>
+<section id="home" class="view active">
+ <div class="hero"><div class="kicker">HANDMADE STUDIO</div><h2>把每一件作品的配方<br>好好記錄下來</h2><p>快速選材料、計算成本，下次製作同款作品時可以直接複製。</p></div>
+ <div class="homeGrid">
+  <button class="homeTile purchase" onclick="go('purchase')"><span class="tileIcon">📦</span><span class="tileText"><strong>材料進貨</strong><small>新增材料與更新平均單價</small></span></button>
+  <button class="homeTile make" onclick="startNewWork()"><span class="tileIcon">📿</span><span class="tileText"><strong>製作作品</strong><small>三步驟完成作品成本</small></span></button>
+  <button class="homeTile library" onclick="go('library')"><span class="tileIcon">📚</span><span class="tileText"><strong>材料庫</strong><small>搜尋、收藏與整理材料</small></span></button>
+  <button class="homeTile works" onclick="go('works')"><span class="tileIcon">🧾</span><span class="tileText"><strong>作品紀錄</strong><small>看照片、配方或複製作品</small></span></button>
+ </div>
+ <div id="homeRecent" class="recentSection"></div>
+</section>
+
+<section id="purchase" class="view">
+ <div class="card"><div class="sectionTitle">材料進貨</div>
+  <div class="notice">同一材料再次進貨時，系統會自動重新計算平均單價。</div>
+  <label>選擇既有材料</label><select id="existingMaterial" onchange="loadExistingMaterial()"></select>
+  <div class="inline" style="margin-top:9px"><button class="btn ghost small" onclick="clearMaterialForm()">建立新材料</button><button class="btn ghost small" onclick="duplicateMaterial()">複製目前資料</button></div>
+  <label>類別</label><input id="mCategory" placeholder="例如：水晶、線材、金屬配件">
+  <label>材料名稱</label><input id="mName" placeholder="例如：白水晶、彈力線、耳勾">
+  <label>規格</label><textarea id="mSpecs" placeholder="例如：8mm、圓珠、AAA級"></textarea>
+  <div class="row"><div><label>進貨數量</label><input id="purchaseQty" type="number" min="0" step="0.01" oninput="recalcPurchaseAmounts()"></div><div><label>計算單位</label><input id="purchaseUnit" placeholder="顆、個、對、公分"></div></div>
+  <label>金額輸入方式</label>
+  <div class="priceMode"><button id="modeUnitBtn" type="button" class="active" onclick="setPurchasePriceMode('unit')">輸入單價</button><button id="modeTotalBtn" type="button" onclick="setPurchasePriceMode('total')">輸入總成本</button></div>
+  <div class="row"><div><label>每單位價格</label><input id="purchaseUnitPrice" type="number" min="0" step="0.01" oninput="recalcPurchaseAmounts()"><div id="unitPriceHint" class="calcHint"></div></div><div><label>進貨總成本</label><input id="purchaseTotal" type="number" min="0" step="0.01" oninput="recalcPurchaseAmounts()"><div id="totalCostHint" class="calcHint"></div></div></div>
+  <label>進貨日期</label><input id="purchaseDate" type="date">
+  <label>備註（選填）</label><input id="purchaseNote" placeholder="例如：購買平台或色澤備註">
+  <button class="btn primary full" style="margin-top:16px" onclick="savePurchase()">儲存進貨</button>
+ </div>
+</section>
+
+<section id="make" class="view">
+ <div class="stepper"><div id="step1dot" class="step active">1 作品</div><div id="step2dot" class="step">2 材料</div><div id="step3dot" class="step">3 成本</div></div>
+ <div id="makeStep1">
+  <div class="card"><div class="sectionTitle">作品資料</div>
+   <label>作品名稱</label><input id="workName" placeholder="例如：月光白水晶手鏈">
+   <label>成品照片（選填）</label>
+   <div class="photoBox"><img id="photoPreview" class="photoPreview"><div id="photoPlaceholder" class="photoPlaceholder">📷<br>照片只用於作品紀錄，可略過</div>
+    <label class="btn secondary" style="display:block;margin:0;cursor:pointer">選擇照片<input id="workPhoto" class="hidden" type="file" accept="image/*" onchange="handlePhoto(event)"></label>
+    <button id="removePhotoBtn" class="btn ghost small hidden" style="margin-top:8px" onclick="removePhoto()">移除照片</button>
+   </div>
+  </div>
+  <button class="btn primary full" onclick="setMakeStep(2)">下一步：選擇材料</button>
+ </div>
+ <div id="makeStep2" class="hidden">
+  <div class="card"><div class="sectionTitle">選擇材料 <button class="btn secondary small" onclick="openPicker()">＋加入</button></div>
+   <div id="quickMaterials"></div><div id="selectedMaterials"></div>
+  </div>
+  <div class="inline"><button class="btn ghost" onclick="setMakeStep(1)">上一步</button><button class="btn primary" onclick="setMakeStep(3)">下一步：計算成本</button></div>
+ </div>
+ <div id="makeStep3" class="hidden">
+  <div class="card"><div class="sectionTitle">製作費用</div>
+   <div class="row"><div><label>製作時間（分鐘）</label><input id="workMinutes" type="number" min="0" value="30" oninput="renderCost()"></div><div><label>包裝及其他</label><input id="extraCost" type="number" min="0" value="0" oninput="renderCost()"></div></div>
+   <label>實際售價（選填）</label><input id="actualPrice" type="number" min="0" placeholder="可留白，仍會顯示建議售價">
+  </div>
+  <div class="totalBox"><div class="totalLine"><span>材料成本</span><strong id="materialCost">$0</strong></div><div class="totalLine"><span>人工成本</span><strong id="laborCost">$0</strong></div><div class="totalLine"><span>包裝及其他</span><strong id="otherCost">$0</strong></div><div class="totalLine"><span>總成本</span><strong id="totalCost">$0</strong></div><div class="totalLine big"><span>建議售價</span><strong id="suggestPrice">$0</strong></div></div>
+  <div class="inline" style="margin-top:12px"><button class="btn ghost" onclick="setMakeStep(2)">上一步</button><button class="btn primary" onclick="completeWork()">完成並儲存作品</button></div>
+ </div>
+</section>
+
+<section id="library" class="view">
+ <div class="card"><div class="sectionTitle">材料庫</div><input id="librarySearch" placeholder="搜尋材料、類別或規格" oninput="renderLibrary()"><div id="libraryCats" class="pills" style="margin-top:11px"></div></div>
+ <div id="libraryList"></div>
+</section>
+
+<section id="works" class="view">
+ <div class="card"><div class="sectionTitle">作品紀錄</div><input id="workSearch" placeholder="搜尋作品名稱或材料" oninput="renderWorks()"></div>
+ <div id="workList"></div>
+</section>
+
+<section id="settings" class="view">
+ <div class="card"><div class="sectionTitle">計算設定</div>
+  <label>每小時工資</label><input id="hourlyRate" type="number" min="0">
+  <label>建議售價倍率</label><input id="priceMultiplier" type="number" min="1" step=".1">
+  <label>售價進位</label><select id="roundTo"><option value="1">不進位</option><option value="5">進位到5元</option><option value="10">進位到10元</option><option value="50">進位到50元</option><option value="100">進位到100元</option></select>
+  <button class="btn primary full" style="margin-top:16px" onclick="saveSettings()">儲存設定</button>
+ </div>
+ <div class="card"><div class="sectionTitle">資料備份</div><div class="inline"><button class="btn ghost" onclick="exportData()">匯出備份</button><label class="btn ghost" style="text-align:center;margin:0;cursor:pointer">匯入備份<input class="hidden" type="file" accept=".json" onchange="importData(event)"></label></div></div>
+</section>
+</main>
+
+<nav class="bottomNav">
+ <button class="navBtn active" data-view="home" onclick="go('home')"><span>🏠</span>首頁</button>
+ <button class="navBtn" data-view="purchase" onclick="go('purchase')"><span>📦</span>進貨</button>
+ <button class="navBtn" data-view="make" onclick="go('make')"><span>📿</span>製作</button>
+ <button class="navBtn" data-view="works" onclick="go('works')"><span>🧾</span>作品</button>
+ <button class="navBtn" data-view="settings" onclick="go('settings')"><span>⚙️</span>設定</button>
+</nav>
+</div>
+
+<div id="pickerModal" class="modal"><div class="sheet"><div class="sheetHead"><h2>加入材料</h2><button class="close" onclick="closePicker()">✕</button></div>
+ <input id="pickerSearch" placeholder="輸入材料名稱立即搜尋" oninput="renderPicker()">
+ <div id="pickerQuick" style="margin-top:14px"></div><div id="pickerBody" style="margin-top:12px"></div>
+</div></div>
+
+<div id="purchaseHistoryModal" class="modal"><div class="sheet"><div class="sheetHead"><h2 id="purchaseHistoryTitle">進貨單價紀錄</h2><button class="close" onclick="closePurchaseHistory()">✕</button></div>
+ <div id="purchaseHistoryBody"></div>
+</div></div>
+
+<script>
+const KEY="handmade_jewelry_inventory_v4", OLDKEY="handmade_jewelry_inventory_v2";
+const DEFAULT_DB={version:4,materials:[],purchases:[],works:[],settings:{hourlyRate:250,priceMultiplier:1.8,roundTo:10}};
+let db=loadDB(), selected=[], workPhotoData="", libraryCat="全部", makeStep=1, purchasePriceMode="unit";
+const $=id=>document.getElementById(id), uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+const round2=v=>Math.round((Number(v)||0)*100)/100, money=v=>"$"+round2(v).toLocaleString("zh-TW");
+function loadDB(){let raw=localStorage.getItem(KEY)||localStorage.getItem(OLDKEY);if(!raw)return structuredClone(DEFAULT_DB);try{const d=JSON.parse(raw);d.version=4;d.materials=(d.materials||[]).map(m=>({...m,favorite:!!m.favorite,useCount:Number(m.useCount||0),lastUsed:m.lastUsed||""}));d.works=(d.works||[]).map(w=>({...w,photo:w.photo||"",actualPrice:Number(w.actualPrice||0)}));return {...structuredClone(DEFAULT_DB),...d,settings:{...DEFAULT_DB.settings,...(d.settings||{})}}}catch{return structuredClone(DEFAULT_DB)}}
+function saveDB(){localStorage.setItem(KEY,JSON.stringify(db))}
+function roundedSale(v){const r=Number(db.settings.roundTo||1);return Math.ceil(v/r)*r}
+function materialLabel(m){return `${m.name}${m.specs?`｜${m.specs.replace(/\n/g,"、")}`:""}`}
+function go(id){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));$(id).classList.add("active");document.querySelectorAll(".navBtn").forEach(b=>b.classList.toggle("active",b.dataset.view===id));const t={home:["手作飾品成本小幫手","記錄材料、作品配方與成本"],purchase:["材料進貨","新增材料或更新平均單價"],make:["製作作品","三步驟快速完成"],library:["材料庫","搜尋與收藏常用材料"],works:["作品紀錄","照片、配方與快速複製"],settings:["設定","工資、售價與備份"]};$("pageTitle").textContent=t[id][0];$("pageSub").textContent=t[id][1];if(id==="home")renderHome();if(id==="purchase")initPurchase();if(id==="library")renderLibrary();if(id==="works")renderWorks();if(id==="make"){renderSelected();setMakeStep(makeStep)}if(id==="settings")loadSettings();window.scrollTo({top:0,behavior:"smooth"})}
+function renderHome(){const arr=db.works.slice(0,5);$("homeRecent").innerHTML=arr.length?`<div class="recentTitle">最近作品</div><div class="recentWorkRow">${arr.map(w=>`<button class="recentWork" onclick="duplicateWork('${w.id}')">${w.photo?`<img src="${w.photo}">`:`<div class="ph">📿</div>`}<div><strong>${esc(w.name)}</strong><small>點一下複製配方</small></div></button>`).join("")}</div>`:""}
+function initPurchase(){$("existingMaterial").innerHTML='<option value="">建立新材料</option>'+db.materials.map(m=>`<option value="${m.id}">${esc(materialLabel(m))}</option>`).join("");$("purchaseDate").value=new Date().toISOString().slice(0,10);setPurchasePriceMode(purchasePriceMode)}
+function setPurchasePriceMode(mode){purchasePriceMode=mode==="total"?"total":"unit";$("modeUnitBtn").classList.toggle("active",purchasePriceMode==="unit");$("modeTotalBtn").classList.toggle("active",purchasePriceMode==="total");$("purchaseUnitPrice").readOnly=purchasePriceMode!=="unit";$("purchaseTotal").readOnly=purchasePriceMode!=="total";if(purchasePriceMode==="unit"){$("purchaseTotal").value=""}else{$("purchaseUnitPrice").value=""}recalcPurchaseAmounts()}
+function recalcPurchaseAmounts(){const qty=Number($("purchaseQty").value);if(purchasePriceMode==="unit"){const unitPrice=Number($("purchaseUnitPrice").value);const total=qty>0&&unitPrice>=0?qty*unitPrice:NaN;$("purchaseTotal").value=Number.isFinite(total)?round2(total):"";$("totalCostHint").textContent=Number.isFinite(total)?`自動計算：${round2(qty)} × ${money(unitPrice)} ＝ ${money(total)}`:"";$("unitPriceHint").textContent="請輸入每單位價格"}else{const total=Number($("purchaseTotal").value);const unitPrice=qty>0&&total>=0?total/qty:NaN;$("purchaseUnitPrice").value=Number.isFinite(unitPrice)?round2(unitPrice):"";$("unitPriceHint").textContent=Number.isFinite(unitPrice)?`自動計算：${money(total)} ÷ ${round2(qty)} ＝ ${money(unitPrice)}`:"";$("totalCostHint").textContent="請輸入本批進貨總成本"}}
+function clearMaterialForm(){$("existingMaterial").value="";["mCategory","mName","mSpecs","purchaseUnit","purchaseQty","purchaseUnitPrice","purchaseTotal","purchaseNote"].forEach(id=>$(id).value="");setPurchasePriceMode("unit")}
+function loadExistingMaterial(){const m=db.materials.find(x=>x.id===$("existingMaterial").value);if(!m)return clearMaterialForm();$("mCategory").value=m.category;$("mName").value=m.name;$("mSpecs").value=m.specs||"";$("purchaseUnit").value=m.unit;$("purchaseQty").value="";$("purchaseUnitPrice").value="";$("purchaseTotal").value="";$("purchaseNote").value="";setPurchasePriceMode("unit")}
+function duplicateMaterial(){$("existingMaterial").value="";$("mName").value=($("mName").value||"")+" 複製"}
+function savePurchase(){recalcPurchaseAmounts();const category=$("mCategory").value.trim(),name=$("mName").value.trim(),specs=$("mSpecs").value.trim(),unit=$("purchaseUnit").value.trim(),qty=Number($("purchaseQty").value),unitCost=Number($("purchaseUnitPrice").value),total=Number($("purchaseTotal").value);if(!category||!name||!unit)return alert("請填寫類別、材料名稱與計算單位");if(!(qty>0)||!(unitCost>=0)||!(total>=0))return alert("請輸入正確的進貨數量與金額");let m=db.materials.find(x=>x.id===$("existingMaterial").value);if(!m){m={id:uid(),category,name,specs,unit,stock:0,avgCost:0,totalValue:0,favorite:false,useCount:0,lastUsed:"",createdAt:new Date().toISOString()};db.materials.push(m)}else Object.assign(m,{category,name,specs,unit});const newStock=Number(m.stock||0)+qty,newValue=Number(m.stock||0)*Number(m.avgCost||0)+total;m.stock=round2(newStock);m.totalValue=round2(newValue);m.avgCost=newStock?newValue/newStock:0;db.purchases.push({id:uid(),materialId:m.id,date:$("purchaseDate").value||new Date().toISOString().slice(0,10),qty,unitCost,total,unit,priceInputMode:purchasePriceMode,note:$("purchaseNote").value.trim()});saveDB();alert(`已儲存「${m.name}」\n本批單價：${money(unitCost)}／${m.unit}\n本批總成本：${money(total)}\n綜合平均單價：${money(m.avgCost)}／${m.unit}`);clearMaterialForm();initPurchase()}
+function toggleFavorite(id){const m=db.materials.find(x=>x.id===id);if(m){m.favorite=!m.favorite;saveDB();renderLibrary();renderPicker();renderQuickMaterials()}}
+function renderLibrary(){const cats=["全部",...new Set(db.materials.map(m=>m.category))];$("libraryCats").innerHTML=cats.map(c=>`<button class="pill ${libraryCat===c?"active":""}" onclick="libraryCat=${JSON.stringify(c)};renderLibrary()">${esc(c)}</button>`).join("");const q=$("librarySearch").value.trim().toLowerCase();const arr=db.materials.filter(m=>(libraryCat==="全部"||m.category===libraryCat)&&(!q||`${m.category} ${m.name} ${m.specs}`.toLowerCase().includes(q))).sort((a,b)=>Number(b.favorite)-Number(a.favorite)||a.category.localeCompare(b.category)||a.name.localeCompare(b.name));$("libraryList").innerHTML=arr.length?arr.map(m=>`<div class="listItem"><div class="materialRow"><button class="star" onclick="toggleFavorite('${m.id}')">${m.favorite?"⭐":"☆"}</button><div class="materialMain"><h3>${esc(m.name)}</h3><div class="meta"><span class="badge">${esc(m.category)}</span>${m.specs?`<br>${esc(m.specs).replace(/\n/g,"、")}`:""}<div class="stockLine">剩餘數量：${round2(m.stock)} ${esc(m.unit)}</div><button class="costHistoryBtn" onclick="openPurchaseHistory('${m.id}')">平均單價：${money(m.avgCost)}／${esc(m.unit)}　› 查看進貨紀錄</button></div></div></div><div class="inline" style="margin-top:10px"><button class="btn ghost small" onclick="useMaterialFromLibrary('${m.id}')">用於作品</button><button class="btn danger small" onclick="deleteMaterial('${m.id}')">刪除</button></div></div>`).join(""):'<div class="empty">目前沒有符合的材料</div>'}
+function openPurchaseHistory(id){const m=db.materials.find(x=>x.id===id);if(!m)return;const records=(db.purchases||[]).filter(p=>p.materialId===id).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));$("purchaseHistoryTitle").textContent=`${m.name}｜進貨單價紀錄`;$("purchaseHistoryBody").innerHTML=`<div class="historySummary"><strong>目前剩餘：${round2(m.stock)} ${esc(m.unit)}</strong><div class="meta">目前平均單價：${money(m.avgCost)}／${esc(m.unit)}<br>累計進貨 ${records.length} 次</div></div>`+(records.length?records.map((p,i)=>`<div class="historyEntry"><div class="historyEntryTop"><strong>第 ${records.length-i} 次進貨</strong><span class="historyDate">${esc(p.date||"未記錄日期")}</span></div><div class="historyCost">單價 ${money(Number(p.unitCost??(Number(p.total||0)/Number(p.qty||1))))}／${esc(p.unit||m.unit)}</div><div class="meta">數量：${round2(p.qty)} ${esc(p.unit||m.unit)}<br>總金額：${money(p.total)}${p.note?`<br>備註：${esc(p.note)}`:""}</div></div>`).join(""):'<div class="empty">目前沒有可顯示的進貨紀錄。<br>舊資料若是在此功能加入前建立，可能只有平均單價。</div>');$("purchaseHistoryModal").classList.add("open")}
+function closePurchaseHistory(){$("purchaseHistoryModal").classList.remove("open")}
+
+function deleteMaterial(id){if(db.works.some(w=>(w.items||[]).some(i=>i.materialId===id)))return alert("此材料已存在於作品紀錄中，為保留歷史成本，不能刪除。");if(confirm("確定刪除這項材料嗎？")){db.materials=db.materials.filter(m=>m.id!==id);db.purchases=db.purchases.filter(p=>p.materialId!==id);saveDB();renderLibrary();initPurchase()}}
+function useMaterialFromLibrary(id){startNewWork();setTimeout(()=>addMaterialPrompt(id),100)}
+function startNewWork(){selected=[];workPhotoData="";$("workName").value="";$("workMinutes").value=30;$("extraCost").value=0;$("actualPrice").value="";removePhoto();makeStep=1;go("make")}
+function setMakeStep(n){makeStep=n;[1,2,3].forEach(i=>{$(`makeStep${i}`).classList.toggle("hidden",i!==n);const dot=$(`step${i}dot`);dot.className="step"+(i===n?" active":i<n?" done":"")});if(n===2){renderSelected();renderQuickMaterials()}if(n===3){if(!selected.length){alert("請先加入至少一項材料");return setMakeStep(2)}renderCost()}}
+function handlePhoto(e){const f=e.target.files[0];if(!f)return;const img=new Image(),reader=new FileReader();reader.onload=()=>{img.onload=()=>{const max=900,scale=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext("2d").drawImage(img,0,0,c.width,c.height);workPhotoData=c.toDataURL("image/jpeg",.72);$("photoPreview").src=workPhotoData;$("photoPreview").style.display="block";$("photoPlaceholder").classList.add("hidden");$("removePhotoBtn").classList.remove("hidden")};img.src=reader.result};reader.readAsDataURL(f)}
+function removePhoto(){workPhotoData="";$("photoPreview").removeAttribute("src");$("photoPreview").style.display="none";$("photoPlaceholder").classList.remove("hidden");$("removePhotoBtn").classList.add("hidden");$("workPhoto").value=""}
+function openPicker(){$("pickerModal").classList.add("open");$("pickerSearch").value="";renderPicker()}function closePicker(){$("pickerModal").classList.remove("open")}
+function rankedMaterials(){return [...db.materials].sort((a,b)=>Number(b.favorite)-Number(a.favorite)||Number(b.useCount)-Number(a.useCount)||String(b.lastUsed).localeCompare(String(a.lastUsed)))}
+function renderQuickMaterials(){const arr=rankedMaterials().filter(m=>m.favorite||m.useCount>0).slice(0,8);$("quickMaterials").innerHTML=arr.length?`<div class="recentTitle">⭐ 最近常用</div><div class="materialQuick">${arr.map(m=>`<button class="quickChip" onclick="addMaterialPrompt('${m.id}')"><strong>${esc(m.name)}</strong><small>${esc(m.specs||m.category)}</small></button>`).join("")}</div>`:""}
+function renderPicker(){const q=$("pickerSearch").value.trim().toLowerCase(),ranked=rankedMaterials(),quick=ranked.filter(m=>m.favorite||m.useCount>0).slice(0,6);$("pickerQuick").innerHTML=!q&&quick.length?`<div class="recentTitle">收藏與最近常用</div><div class="materialQuick">${quick.map(m=>`<button class="quickChip" onclick="addMaterialPrompt('${m.id}')"><strong>${m.favorite?"⭐ ":""}${esc(m.name)}</strong><small>${esc(m.specs||m.category)}</small></button>`).join("")}</div>`:"";const arr=ranked.filter(m=>!q||`${m.name} ${m.category} ${m.specs}`.toLowerCase().includes(q));$("pickerBody").innerHTML=arr.length?arr.map(m=>`<div class="listItem"><div class="materialRow"><button class="star" onclick="toggleFavorite('${m.id}')">${m.favorite?"⭐":"☆"}</button><div class="materialMain" onclick="addMaterialPrompt('${m.id}')"><h3>${esc(m.name)}</h3><div class="meta">${esc(m.category)}${m.specs?`｜${esc(m.specs).replace(/\n/g,"、")}`:""}<br>${money(m.avgCost)}／${esc(m.unit)}</div></div></div></div>`).join(""):'<div class="empty">找不到符合的材料</div>'}
+function addMaterialPrompt(id,defaultQty=""){const m=db.materials.find(x=>x.id===id);if(!m)return;const q=prompt(`「${m.name}」使用多少 ${m.unit}？`,defaultQty);if(q===null)return;const qty=Number(q);if(!(qty>0))return alert("請輸入大於0的數量");selected.push({id:uid(),materialId:m.id,qty,name:m.name,category:m.category,specs:m.specs,unit:m.unit,unitCost:Number(m.avgCost||0),subtotal:qty*Number(m.avgCost||0)});closePicker();renderSelected()}
+function renderSelected(){$("selectedMaterials").innerHTML=selected.length?selected.map(s=>`<div class="listItem"><div class="materialRow"><div class="materialMain"><h3>${esc(s.name)}</h3><div class="meta">${s.specs?`${esc(s.specs).replace(/\n/g,"、")}<br>`:""}${round2(s.qty)} ${esc(s.unit)} × ${money(s.unitCost)} ＝ ${money(s.subtotal)}</div></div><button class="btn danger small" onclick="removeSelected('${s.id}')">移除</button></div></div>`).join(""):'<div class="empty">尚未加入材料</div>';renderCost()}
+function removeSelected(id){selected=selected.filter(s=>s.id!==id);renderSelected()}
+function renderCost(){const material=selected.reduce((a,s)=>a+Number(s.subtotal||0),0),minutes=Number($("workMinutes").value||0),labor=minutes/60*Number(db.settings.hourlyRate||0),other=Number($("extraCost").value||0),total=material+labor+other,sale=roundedSale(total*Number(db.settings.priceMultiplier||1));$("materialCost").textContent=money(material);$("laborCost").textContent=money(labor);$("otherCost").textContent=money(other);$("totalCost").textContent=money(total);$("suggestPrice").textContent=money(sale)}
+function completeWork(){if(!selected.length)return alert("請先加入材料");const material=selected.reduce((a,s)=>a+Number(s.subtotal||0),0),minutes=Number($("workMinutes").value||0),labor=minutes/60*Number(db.settings.hourlyRate||0),other=Number($("extraCost").value||0),total=material+labor+other,sale=roundedSale(total*Number(db.settings.priceMultiplier||1)),now=new Date().toISOString();selected.forEach(s=>{const m=db.materials.find(x=>x.id===s.materialId);if(m){m.stock=round2(Math.max(0,Number(m.stock||0)-s.qty));m.useCount=Number(m.useCount||0)+1;m.lastUsed=now}});db.works.unshift({id:uid(),name:$("workName").value.trim()||"未命名作品",date:now,photo:workPhotoData,items:structuredClone(selected),minutes,labor,other,material,total,suggested:sale,actualPrice:Number($("actualPrice").value||0)});saveDB();alert(`作品已儲存\n總成本：${money(total)}\n建議售價：${money(sale)}`);startNewWork();go("works")}
+function renderWorks(){const q=$("workSearch").value.trim().toLowerCase(),arr=db.works.filter(w=>!q||`${w.name} ${(w.items||[]).map(i=>i.name).join(" ")}`.toLowerCase().includes(q));$("workList").innerHTML=arr.length?arr.map(w=>`<article class="workCard">${w.photo?`<img class="workPhoto" src="${w.photo}">`:`<div class="workPlaceholder">📿</div>`}<div class="workBody"><div class="workTop"><h3>${esc(w.name)}</h3><span class="date">${new Date(w.date).toLocaleDateString("zh-TW")}</span></div><div class="costGrid"><div class="costCell"><small>總成本</small><strong>${money(w.total)}</strong></div><div class="costCell"><small>${w.actualPrice?"實際售價":"建議售價"}</small><strong>${money(w.actualPrice||w.suggested)}</strong></div></div><details><summary>查看材料與成本明細</summary><div class="meta" style="margin-top:9px">${(w.items||[]).map(i=>`${esc(i.name)}${i.specs?`（${esc(i.specs).replace(/\n/g,"、")}）`:""}：${round2(i.qty)} ${esc(i.unit)}，${money(i.subtotal)}`).join("<br>")}<br><br>材料 ${money(w.material)}｜人工 ${money(w.labor)}｜其他 ${money(w.other)}</div></details><div class="inline" style="margin-top:12px"><button class="btn secondary small" onclick="duplicateWork('${w.id}')">複製作品</button><button class="btn danger small" onclick="deleteWork('${w.id}')">刪除並恢復材料</button></div></div></article>`).join(""):'<div class="empty">目前沒有作品紀錄</div>'}
+function duplicateWork(id){const w=db.works.find(x=>x.id===id);if(!w)return;selected=(w.items||[]).map(i=>({...structuredClone(i),id:uid()}));workPhotoData=w.photo||"";$("workName").value=w.name+" 複製";$("workMinutes").value=w.minutes||30;$("extraCost").value=w.other||0;$("actualPrice").value="";if(workPhotoData){$("photoPreview").src=workPhotoData;$("photoPreview").style.display="block";$("photoPlaceholder").classList.add("hidden");$("removePhotoBtn").classList.remove("hidden")}else removePhoto();makeStep=1;go("make")}
+function deleteWork(id){const w=db.works.find(x=>x.id===id);if(!w||!confirm(`確定刪除「${w.name}」嗎？\n材料使用量會加回原本紀錄。`))return;(w.items||[]).forEach(i=>{let m=db.materials.find(x=>x.id===i.materialId);if(!m){m={id:i.materialId||uid(),category:i.category||"已還原材料",name:i.name,specs:i.specs||"",unit:i.unit,stock:0,avgCost:i.unitCost,totalValue:0,favorite:false,useCount:0,lastUsed:"",createdAt:new Date().toISOString()};db.materials.push(m)}m.stock=round2(Number(m.stock||0)+Number(i.qty||0));m.totalValue=round2(m.stock*Number(m.avgCost||0))});db.works=db.works.filter(x=>x.id!==id);saveDB();renderWorks();renderHome()}
+function loadSettings(){$("hourlyRate").value=db.settings.hourlyRate;$("priceMultiplier").value=db.settings.priceMultiplier;$("roundTo").value=db.settings.roundTo}
+function saveSettings(){db.settings={hourlyRate:Number($("hourlyRate").value||0),priceMultiplier:Number($("priceMultiplier").value||1),roundTo:Number($("roundTo").value||1)};saveDB();alert("設定已儲存")}
+function exportData(){const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`手作飾品備份_${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href)}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.materials||!d.works)throw 0;if(confirm("匯入會覆蓋目前資料，確定繼續嗎？")){db={...structuredClone(DEFAULT_DB),...d,purchases:d.purchases||[],settings:{...DEFAULT_DB.settings,...(d.settings||{})}};db.version=4;saveDB();location.reload()}}catch{alert("備份檔格式不正確")}};r.readAsText(f)}
+renderHome();initPurchase();renderSelected();
+</script>
+</body>
+</html>
